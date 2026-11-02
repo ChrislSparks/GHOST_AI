@@ -1,6 +1,8 @@
 from fastapi import FastAPI
 from pydantic import BaseModel
 
+from backend.llm import ask
+
 app = FastAPI(title="G.H.O.S.T.")
 
 
@@ -15,5 +17,5 @@ def health():
 
 @app.post("/chat")
 def chat(body: ChatIn):
-    # For now G.H.O.S.T. just repeats you. Later this calls the LLM.
-    return {"reply": f"Echo: {body.message}"}
+    reply = ask(body.message)
+    return {"reply": reply}
