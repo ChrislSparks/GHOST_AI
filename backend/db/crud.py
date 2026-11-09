@@ -1,0 +1,36 @@
+# Create, Read, Update, Delete (CRUD) functions for the database
+
+from sqlalchemy.orm import Session
+from backend.db.models import Conversation, Message
+
+# Creates a conversation and adds it to the database
+def create_conversation(
+    db: Session, 
+    title: str = "New conversation",
+) -> Conversation:
+    conversation = Conversation(title=title)
+    db.add(conversation)
+    db.commit()
+    db.refresh(conversation)
+    return conversation
+
+# Creates a message and adds it to the database
+def add_message(
+    db: Session,
+    conversation_id: int,
+    role: str,
+    content: str,
+    input_type: str = "text",
+) -> Message:
+    if role not in ("user", "assistant"):
+        raise ValueError("role must be 'user' or 'assistant'")
+    message = Message(
+        conversation_id=conversation_id,
+        role=role,
+        content=content,
+        input_type=input_type,
+    )
+    db.add(message)
+    db.commit()
+    db.refresh(message)
+    return message
