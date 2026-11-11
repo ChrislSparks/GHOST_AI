@@ -19,7 +19,7 @@ def db():
     engine.dispose()
 
 class TestDatabaseService: 
-    
+
     # Tests conversation -> database saving function
     def test_create_conversation_saves_to_database(self, db):
         repo = DatabaseService(db)
@@ -29,6 +29,14 @@ class TestDatabaseService:
         assert conversation.id is not None
         assert conversation.title == "G.H.O.S.T. and Gemini"
         assert db.get(models.Conversation, conversation.id) is not None
+
+    # Tests default conversation title
+    def test_create_conversation_uses_default_title(self, db):
+        repo = DatabaseService(db)
+
+        conversation = repo.create_conversation()
+
+        assert conversation.title == "New conversation"
 
     # Tests message -> conversation linking function
     def test_add_message_links_to_conversation(self, db):
@@ -41,3 +49,11 @@ class TestDatabaseService:
         assert message.role == "user"
         assert message.input_type == "voice"
         assert len(conversation.messages) == 1
+
+    # Tests invalid role flagging for non-user/assistants
+    def test_add_message_rejects_invalid_role(self, db):
+        repo = DatabaseService(db)
+        conversation = repo.create_conversation()
+
+        with pytest.raises(ValueError):
+            repo.add_message(conversation.id, "robot", "Hello")
