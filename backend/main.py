@@ -1,9 +1,17 @@
 from fastapi import FastAPI
 from pydantic import BaseModel
 
+from contextlib import asynccontextmanager
+from backend.db.database import init_db
 from backend.llm import ask
 
-app = FastAPI(title="G.H.O.S.T.")
+# Initialize the database if it does not exist yet
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    init_db()
+    yield
+
+app = FastAPI(title="G.H.O.S.T.", lifespan=lifespan)
 
 
 class ChatIn(BaseModel):
