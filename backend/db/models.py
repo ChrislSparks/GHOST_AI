@@ -54,6 +54,6 @@ class UserSettings(Base):
     response_length: Mapped[str] = mapped_column(String(30), default="medium")
     save_history: Mapped[bool] = mapped_column(Boolean, default=True)
 
-class UploadedFiles(Base):
-    __tablename__ ="uploaded_files"
+# class UploadedFiles(Base):
+    # __tablename__ ="uploaded_files"
     # Add later when file upload tasks are completed
