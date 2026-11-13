@@ -54,3 +54,21 @@ class TestConversationManager:
         history[0]["content"] = "Changed"
 
         assert conversation.get_history()[0]["content"] == "Original"
+
+    # Method 3: clear_history()
+
+    def test_clear_history(self):
+        conversation = ConversationManager()
+        conversation.add_message("user", "Hello")
+        conversation.add_message("assistant", "Hi!")
+
+        conversation.clear_history()
+
+        assert conversation.get_history() == []
+    
+    def test_clear_empty_history_does_not_fail(self):
+        conversation = ConversationManager()
+
+        conversation.clear_history()
+
+        assert conversation.get_history() == []

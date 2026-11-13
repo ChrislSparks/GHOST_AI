@@ -25,3 +25,7 @@ class ConversationManager:
     def get_history(self):
         """Return a copy of the conversation history."""
         return [message.copy() for message in self.messages]
+
+    def clear_history(self):
+        """Remove all messages from the active conversation."""
+        self.messages.clear()
