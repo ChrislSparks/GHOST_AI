@@ -30,6 +30,8 @@ All `created_at` values are filled in automatically by the models and are stored
 | is_triggered | boolean  | Default false            |
 | created_at   | datetime |                          |
 
+- Datetime values are stored in UTC.
+
 ## user_settings
 | Column          | Type    | Notes                     |
 |-----------------|---------|---------------------------|
