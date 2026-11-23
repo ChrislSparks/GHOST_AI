@@ -40,6 +40,7 @@ class Reminder(Base):
     message: Mapped[str] = mapped_column(String(500))
     remind_at: Mapped[datetime] = mapped_column(DateTime)
     is_triggered: Mapped[bool] = mapped_column(Boolean, default=False)
+    is_acknowledged: Mapped[bool] = mapped_column(Boolean, default=False)
     created_at: Mapped[datetime] = mapped_column(DateTime, default=utcnow)
 
 class UserSettings(Base):

@@ -90,3 +90,22 @@ class DatabaseService:
         self.db.commit()
         self.db.refresh(reminder)
         return reminder
+
+    def get_pending_alerts(self, now: datetime | None = None) -> list[Reminder]:
+        now = now or _utc_now()
+        stmt = (
+            select(Reminder)
+            .where(Reminder.is_triggered == False)
+            .where(Reminder.remind_at <= now)
+            .order_by(Reminder.remind_at)
+        )
+        return list(self.db.scalars(stmt))
+
+    def acknowledge_reminder(self, reminder_id: int) -> Reminder:
+        reminder = self.db.get(Reminder, reminder_id)
+        if reminder is None:
+            raise ValueError(f"Reminder with id {reminder_id} does not exist.")
+        reminder.is_acknowledged = True
+        self.db.commit()
+        self.db.refresh(reminder)
+        return reminder
