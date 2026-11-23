@@ -14,7 +14,7 @@ class TestProcessDueReminders:
 
     # Tests that due reminders are marked as triggered and returned
     def test_marks_due_reminders_as_triggered(self, db, service):
-        due = service.create_reminder("due", utc_in(hours=-1))
+        due = service.create_reminder("due", utc_in(hours=1))
         future = service.create_reminder("future", utc_in(hours=5))
 
         processed = process_due_reminders(db, now=utc_in(hours=2))
