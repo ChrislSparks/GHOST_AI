@@ -5,11 +5,11 @@ Models are defined in `backend/db/models.py`.
 All `created_at` values are filled in automatically by the models and are stored in UTC.
 
 ## conversations
-| Column     | Type     | Notes                  |
-|------------|----------|------------------------|
-| id         | integer  | Primary key            |
+| Column     | Type     | Notes                      |
+|------------|----------|----------------------------|
+| id         | integer  | Primary key                |
 | title      | string   | Default "New conversation" |
-| created_at | datetime |                        |
+| created_at | datetime |                            |
 
 ## messages
 | Column          | Type     | Notes                                   |
@@ -22,15 +22,16 @@ All `created_at` values are filled in automatically by the models and are stored
 | created_at      | datetime |                                         |
 
 ## reminders
-| Column       | Type     | Notes                    |
-|--------------|----------|--------------------------|
-| id           | integer  | Primary key              |
-| message      | string   | Reminder text            |
-| remind_at    | datetime | When it should trigger   |
-| is_triggered | boolean  | Default false            |
-| created_at   | datetime |                          |
+| Column          | Type     | Notes                        |
+|-----------------|----------|------------------------------|
+| id              | integer  | Primary key                  |
+| message         | string   | Reminder text                |
+| remind_at       | datetime | When it should trigger (UTC) |
+| is_triggered    | boolean  | Scheduler has processed it   |
+| is_acknowledged | boolean  | User has dismissed the alert |
+| created_at      | datetime | Set when created (UTC)       |
 
-- Datetime values are stored in UTC.
+`is_triggered` means the scheduler has processed the reminder. `is_acknowledged` means the user has dismissed it. The frontend's "what is due?" query returns reminders whose time has passed and that are not yet acknowledged, so overdue reminders keep showing until dismissed.
 
 ## user_settings
 | Column          | Type    | Notes                     |
