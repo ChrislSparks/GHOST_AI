@@ -91,6 +91,7 @@ class DatabaseService:
         self.db.refresh(reminder)
         return reminder
 
+    # Retrieves all pending (not triggered and not acknowledged) reminders from the database
     def get_pending_alerts(self, now: datetime | None = None) -> list[Reminder]:
         now = now or _utc_now()
         stmt = (
@@ -101,6 +102,7 @@ class DatabaseService:
         )
         return list(self.db.scalars(stmt))
 
+    # Acknowledges a reminder in the database
     def acknowledge_reminder(self, reminder_id: int) -> Reminder:
         reminder = self.db.get(Reminder, reminder_id)
         if reminder is None:

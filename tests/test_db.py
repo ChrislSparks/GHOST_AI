@@ -133,3 +133,43 @@ class TestReminderMethods:
     def test_mark_triggered_rejects_unknown_id(self, service):
         with pytest.raises(ValueError):
             service.mark_triggered(999)
+
+    # Tests that pending alerts include overdue reminders even if they have been triggered
+    def test_get_pending_alerts_includes_overdue_even_if_triggered(self, service):
+        reminder = service.create_reminder("overdue", utc_in(hours=1))
+        service.mark_triggered(reminder.id)
+
+        pending = service.get_pending_alerts(now=utc_in(hours=48))
+
+        assert [r.message for r in pending] == ["overdue"]
+
+    # Tests that pending alerts skip future reminders
+    def test_get_pending_alerts_skips_future_reminders(self, service):
+        service.create_reminder("future", utc_in(hours=5))
+
+        pending = service.get_pending_alerts(now=utc_in(hours=1))
+
+        assert pending == []
+
+    # Tests that pending alerts skip acknowledged reminders
+    def test_get_pending_alerts_excludes_acknowledged(self, service):
+        reminder = service.create_reminder("dismissed", utc_in(hours=1))
+        service.acknowledge_reminder(reminder.id)
+
+        pending = service.get_pending_alerts(now=utc_in(hours=2))
+
+        assert pending == []
+
+    # Tests that acknowledging a reminder sets the is_acknowledged flag
+    def test_acknowledge_reminder_sets_flag(self, service):
+        reminder = service.create_reminder("Ping", utc_in(hours=1))
+        assert reminder.is_acknowledged is False
+
+        updated = service.acknowledge_reminder(reminder.id)
+
+        assert updated.is_acknowledged is True
+
+    # Tests that acknowledging a reminder with an unknown ID raises a ValueError
+    def test_acknowledge_reminder_rejects_unknown_id(self, service):
+        with pytest.raises(ValueError):
+            service.acknowledge_reminder(9999)
