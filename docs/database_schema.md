@@ -46,3 +46,9 @@ All `created_at` values are filled in automatically by the models and are stored
 
 ## Relationships
 - One conversation has many messages. Deleting a conversation deletes its messages.
+
+## Time zones
+All datetimes (`created_at`, `remind_at`) are stored in **UTC** as naive datetimes,
+because SQLite does not keep time zone information. The frontend converts the user's
+local time to UTC before sending it to the API, and converts back for display.
+The scheduler compares `remind_at` against the current UTC time.
