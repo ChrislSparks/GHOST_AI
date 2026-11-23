@@ -96,7 +96,7 @@ class DatabaseService:
         now = now or _utc_now()
         stmt = (
             select(Reminder)
-            .where(Reminder.is_triggered == False)
+            .where(Reminder.is_acknowledged.is_(False))
             .where(Reminder.remind_at <= now)
             .order_by(Reminder.remind_at)
         )
