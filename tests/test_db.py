@@ -2,31 +2,13 @@
 # Uses pytest.
 
 import pytest
-from sqlalchemy import create_engine
-from sqlalchemy.orm import sessionmaker
 from datetime import datetime, timedelta, timezone
-from backend.db.database import Base
-from backend.db import models, crud
+from backend.db import models
 from backend.db.crud import DatabaseService
 
 # Helper function to get the current UTC time without timezone information
 def utc_in(hours: float = 0) -> datetime:
     return datetime.now(timezone.utc).replace(tzinfo=None) + timedelta(hours=hours)
-
-# Fixture to create a temporary in-memory database for testing
-@pytest.fixture
-def db():
-    engine = create_engine("sqlite:///:memory:")
-    Base.metadata.create_all(bind=engine)
-    session = sessionmaker(bind=engine)()
-    yield session
-    session.close()
-    engine.dispose()
-
-# Fixture to provide a DatabaseService instance for testing
-@pytest.fixture
-def service(db):
-    return DatabaseService(db)
 
 class TestDatabaseService: 
 
